@@ -31,6 +31,8 @@ namespace LibGit2Sharp.Core
         /// Flags for automerging content.
         /// </summary>
         public MergeFileFavor MergeFileFavorFlags;
+
+        public uint file_flags;
     }
 
     /// <summary>
