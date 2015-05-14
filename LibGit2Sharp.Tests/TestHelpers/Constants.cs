@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 
 namespace LibGit2Sharp.Tests.TestHelpers
 {
@@ -10,6 +11,14 @@ namespace LibGit2Sharp.Tests.TestHelpers
         public const string UnknownSha = "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef";
         public static readonly Identity Identity = new Identity("A. U. Thor", "thor@valhalla.asgard.com");
         public static readonly Signature Signature = new Signature(Identity, new DateTimeOffset(2011, 06, 16, 10, 58, 27, TimeSpan.FromHours(2)));
+        public static readonly bool IsRunningOnUnix = IsUnixPlatform();
+
+        private static bool IsUnixPlatform()
+        {
+            // see http://mono-project.com/FAQ%3a_Technical#Mono_Platforms
+            var p = (int)Environment.OSVersion.Platform;
+            return (p == 4) || (p == 6) || (p == 128);
+        }
 
         // Populate these to turn on live credential tests:  set the
         // PrivateRepoUrl to the URL of a repository that requires
@@ -37,19 +46,15 @@ namespace LibGit2Sharp.Tests.TestHelpers
         {
             string tempPath = null;
 
-            var unixPath = Type.GetType("Mono.Unix.UnixPath, Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
-
-            if (unixPath != null)
+            if (IsRunningOnUnix)
             {
                 // We're running on Mono/*nix. Let's unwrap the path
-                tempPath = (string)unixPath.InvokeMember("GetCompleteRealPath",
-                    System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.FlattenHierarchy |
-                    System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Public,
-                    null, unixPath, new object[] { Path.GetTempPath() });
+                tempPath = UnwrapUnixTempPath();
             }
             else
             {
                 const string LibGit2TestPath = "LibGit2TestPath";
+
                 // We're running on .Net/Windows
                 if (Environment.GetEnvironmentVariables().Contains(LibGit2TestPath))
                 {
@@ -67,6 +72,17 @@ namespace LibGit2Sharp.Tests.TestHelpers
             string testWorkingDirectory = Path.Combine(tempPath, "LibGit2Sharp-TestRepos");
             Trace.TraceInformation("Test working directory set to '{0}'", testWorkingDirectory);
             return testWorkingDirectory;
+        }
+
+        private static string UnwrapUnixTempPath()
+        {
+            var assembly = Assembly.Load("Mono.Posix");
+            var type = assembly.GetType("Mono.Unix.UnixPath");
+
+            return (string)type.InvokeMember("GetCompleteRealPath",
+                BindingFlags.Static | BindingFlags.FlattenHierarchy |
+                BindingFlags.InvokeMethod | BindingFlags.Public,
+                null, type, new object[] { Path.GetTempPath() });
         }
     }
 }
