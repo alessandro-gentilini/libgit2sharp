@@ -7,11 +7,11 @@ namespace LibGit2Sharp.Tests.TestHelpers
 {
     public static class Constants
     {
+        public static readonly bool IsRunningOnUnix = IsUnixPlatform();
         public static readonly string TemporaryReposPath = BuildPath();
         public const string UnknownSha = "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef";
         public static readonly Identity Identity = new Identity("A. U. Thor", "thor@valhalla.asgard.com");
         public static readonly Signature Signature = new Signature(Identity, new DateTimeOffset(2011, 06, 16, 10, 58, 27, TimeSpan.FromHours(2)));
-        public static readonly bool IsRunningOnUnix = IsUnixPlatform();
 
         private static bool IsUnixPlatform()
         {
