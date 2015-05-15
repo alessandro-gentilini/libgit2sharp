@@ -114,7 +114,7 @@ namespace LibGit2Sharp.Core
             IntPtr backend,
             ref GitOid oid,
             IntPtr data,
-            UIntPtr len,
+            Int64 len,
             GitObjectType type);
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace LibGit2Sharp.Core
         public delegate int writestream_callback(
             out IntPtr stream_out,
             IntPtr backend,
-            UIntPtr length,
+            Int64 length,
             GitObjectType type);
 
         /// <summary>

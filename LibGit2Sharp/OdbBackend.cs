@@ -412,11 +412,9 @@ namespace LibGit2Sharp
                 IntPtr backend,
                 ref GitOid oid,
                 IntPtr data,
-                UIntPtr len,
+                Int64 length,
                 GitObjectType type)
             {
-                long length = ConverToLong(len);
-
                 OdbBackend odbBackend = MarshalOdbBackend(backend);
                 if (odbBackend == null)
                 {
@@ -440,12 +438,10 @@ namespace LibGit2Sharp
             private static int WriteStream(
                 out IntPtr stream_out,
                 IntPtr backend,
-                UIntPtr len,
+                Int64 length,
                 GitObjectType type)
             {
                 stream_out = IntPtr.Zero;
-
-                long length = ConverToLong(len);
 
                 OdbBackend odbBackend = MarshalOdbBackend(backend);
                 if (odbBackend == null)
