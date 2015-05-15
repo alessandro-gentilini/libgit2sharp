@@ -50,7 +50,6 @@ namespace LibGit2Sharp.Tests.TestHelpers
             {
                 // We're running on Mono/*nix. Let's unwrap the path
                 tempPath = UnwrapUnixTempPath();
-                Trace.TraceInformation("Running on Unix, tempPath: '{0}'", tempPath);
             }
             else
             {
@@ -77,8 +76,7 @@ namespace LibGit2Sharp.Tests.TestHelpers
 
         private static string UnwrapUnixTempPath()
         {
-            var assembly = Assembly.Load("Mono.Posix");
-            var type = assembly.GetType("Mono.Unix.UnixPath");
+            var type = Type.GetType("Mono.Unix.UnixPath, Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
 
             return (string)type.InvokeMember("GetCompleteRealPath",
                 BindingFlags.Static | BindingFlags.FlattenHierarchy |
