@@ -50,6 +50,7 @@ namespace LibGit2Sharp.Tests.TestHelpers
             {
                 // We're running on Mono/*nix. Let's unwrap the path
                 tempPath = UnwrapUnixTempPath();
+                Trace.TraceInformation("Running on Unix, tempPath: '{0}'", tempPath);
             }
             else
             {
