@@ -2126,46 +2126,6 @@ namespace LibGit2Sharp.Core
             }
         }
 
-        public static void git_remote_set_fetch_refspecs(RemoteSafeHandle remote, IEnumerable<string> refSpecs)
-        {
-            using (ThreadAffinity())
-            {
-                var array = new GitStrArrayManaged();
-
-                try
-                {
-                    array = GitStrArrayManaged.BuildFrom(refSpecs.ToArray());
-
-                    int res = NativeMethods.git_remote_set_fetch_refspecs(remote, ref array.Array);
-                    Ensure.ZeroResult(res);
-                }
-                finally
-                {
-                    array.Dispose();
-                }
-            }
-        }
-
-        public static void git_remote_set_push_refspecs(RemoteSafeHandle remote, IEnumerable<string> refSpecs)
-        {
-            using (ThreadAffinity())
-            {
-                var array = new GitStrArrayManaged();
-
-                try
-                {
-                    array = GitStrArrayManaged.BuildFrom(refSpecs.ToArray());
-
-                    int res = NativeMethods.git_remote_set_push_refspecs(remote, ref array.Array);
-                    Ensure.ZeroResult(res);
-                }
-                finally
-                {
-                    array.Dispose();
-                }
-            }
-        }
-
         public static void git_remote_set_url(RepositorySafeHandle repo, string remote, string url)
         {
             using (ThreadAffinity())
@@ -2202,14 +2162,18 @@ namespace LibGit2Sharp.Core
             }
         }
 
-        public static void git_remote_fetch(RemoteSafeHandle remote, GitFetchOptions fetchOptions, string logMessage)
+        public static void git_remote_fetch(
+            RemoteSafeHandle remote, IEnumerable<string> refSpecs,
+            GitFetchOptions fetchOptions, string logMessage)
         {
             using (ThreadAffinity())
             {
-                var array = new GitStrArrayNative();
+                var array = new GitStrArrayManaged();
 
                 try
                 {
+                    array = GitStrArrayManaged.BuildFrom(refSpecs.ToArray());
+
                     int res = NativeMethods.git_remote_fetch(remote, ref array.Array, fetchOptions, logMessage);
                     Ensure.ZeroResult(res);
                 }

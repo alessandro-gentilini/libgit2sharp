@@ -128,7 +128,7 @@ namespace LibGit2Sharp
 
         static void DoFetch(RepositorySafeHandle repoHandle, Remote remote, string url,
             FetchOptions options, string logMessage,
-            IEnumerable<string> refspecs = null)
+            IEnumerable<string> refspecs)
         {
             if (options == null)
             {
@@ -137,11 +137,6 @@ namespace LibGit2Sharp
 
             using (RemoteSafeHandle remoteHandle = Build(repoHandle, remote, url))
             {
-                if (refspecs != null)
-                {
-                    Proxy.git_remote_set_fetch_refspecs(remoteHandle, refspecs);
-                }
-
                 var callbacks = new RemoteCallbacks(options);
                 GitRemoteCallbacks gitCallbacks = callbacks.GenerateCallbacks();
 
@@ -164,7 +159,7 @@ namespace LibGit2Sharp
                     fetchOptions.download_tags =  options.TagFetchMode.Value;
                 }
 
-                Proxy.git_remote_fetch(remoteHandle, fetchOptions, logMessage);
+                Proxy.git_remote_fetch(remoteHandle, refspecs, fetchOptions, logMessage);
             }
         }
 
@@ -207,7 +202,7 @@ namespace LibGit2Sharp
         {
             Ensure.ArgumentNotNull(remote, "remote");
 
-            DoFetch(repository.Handle, remote, null, options, logMessage);
+            DoFetch(repository.Handle, remote, null, options, logMessage, new string[0]);
         }
 
         /// <summary>
