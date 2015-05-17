@@ -134,6 +134,17 @@ namespace LibGit2Sharp.Tests
                 var expectedFetchState = new ExpectedFetchState(remoteName);
                 expectedFetchState.AddExpectedBranch(localBranchName, ObjectId.Zero, remoteInfo.BranchTips[remoteBranchName]);
 
+                // Let's account for opportunistic updates during the Fetch() call
+                if (localBranchName != "master")
+                {
+                    expectedFetchState.AddExpectedBranch("master", ObjectId.Zero, remoteInfo.BranchTips["master"]);
+                }
+
+                if (localBranchName == "master" && remoteBranchName != "master")
+                {
+                    expectedFetchState.AddExpectedBranch(remoteBranchName, ObjectId.Zero, remoteInfo.BranchTips[remoteBranchName]);
+                }
+
                 // Perform the actual fetch
                 repo.Network.Fetch(remote, new string[] { refSpec }, new FetchOptions {
                     TagFetchMode = TagFetchMode.None,
