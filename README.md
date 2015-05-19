@@ -55,7 +55,7 @@ The CI builds are generously hosted and run on the [Travis][travis] and [AppVeyo
 
 More thorough information available in the [wiki][wiki].
 
- [wiki]: https://github.com/libgit2/libgit2sharp/wiki
+ [wiki]: https://github.com/libgit2/libgit2sharp/wiki#contributing
 
 ## Optimizing unit testing
 LibGit2Sharp strives to have comprehensive and robust unit test suite to insure the quality of the software and to assist new contributors and users who can use the tests as sample to jump start development. There are over one-thousand unit-tests for LibGit2Sharp, this number will only grow as functionality is added.
